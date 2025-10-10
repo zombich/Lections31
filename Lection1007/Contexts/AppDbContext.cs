@@ -15,7 +15,7 @@ namespace Lection1007.Contexts
         public AppDbContext()
         {
             //Database.EnsureDeleted(); //удаление бд 
-            Database.EnsureCreated(); // создание бд
+            //Database.EnsureCreated(); // создание бд
         }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
