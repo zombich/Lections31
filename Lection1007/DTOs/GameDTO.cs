@@ -27,7 +27,7 @@ public static class GameExtension
     }
 
     public static IEnumerable<GameDTO> ToDtos(this IEnumerable<Game> games)
-        => games.ToDtos();
+        => games.Select(g => g.ToDto());
 
 }
 

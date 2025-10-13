@@ -1,9 +1,11 @@
 ﻿using Lection1007.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 
 namespace Lection1007.Contexts
@@ -24,7 +26,9 @@ namespace Lection1007.Contexts
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=mssql;Initial Catalog=ispp3104;Persist Security Info=True;User ID=ispp3104;Password=3104;Encrypt=True;Trust Server Certificate=True");
+            optionsBuilder
+                .UseSqlServer("Data Source=mssql;Initial Catalog=ispp3104;Persist Security Info=True;User ID=ispp3104;Password=3104;Encrypt=True;Trust Server Certificate=True")
+                .LogTo(Console.WriteLine,LogLevel.Information);
             //optionsBuilder.UseSqlite("Data Source = test.db");
         }
     }

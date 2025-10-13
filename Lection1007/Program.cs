@@ -9,22 +9,23 @@ var optionsBuilder = new DbContextOptionsBuilder<StoreDbContext>();
 optionsBuilder.UseSqlServer("Data Source=mssql;Initial Catalog=ispp3104;Persist Security Info=True;User ID=ispp3104;Password=3104;Encrypt=True;Trust Server Certificate=True");
 using var context = new StoreDbContext(optionsBuilder.Options);
 
-var titles = context.Games.Select(games => games.Name);
 
-foreach (var t in titles)
-    Console.WriteLine(t);
+var isAllGamesDeleted = context.Games.All(g => g.IsDeleted);
 
-var games = context.Games
-    .Select(g => g.ToDto());
-foreach (var game in games)
-    Console.WriteLine($"{game.Title} - {game.Price} - {game.Category}");
+//join(context);
+
+//GroupBy(context);
+
+Console.WriteLine();
+
+//IQueryable<string> titles = SelectDto(context);
 
 //IOrderedQueryable<Game> games = Sort(context);
 
 
 //IQueryable<Game> games = FilterBy(context);
 
-Console.WriteLine(titles.ToQueryString());
+//Console.WriteLine(titles.ToQueryString());
 
 
 //var categoryService = new CategoryService(context);
@@ -41,6 +42,7 @@ Console.WriteLine(titles.ToQueryString());
 //Filter(context);
 
 //PAgination(context);
+
 
 
 
@@ -198,4 +200,53 @@ static IOrderedQueryable<Game> Sort(StoreDbContext context)
     foreach (var g in games)
         Console.WriteLine($"{g.Name} - {g.Price}");
     return games;
+}
+
+static IQueryable<string> SelectDto(StoreDbContext context)
+{
+    var titles = context.Games.Select(games => games.Name);
+
+    foreach (var t in titles)
+        Console.WriteLine(t);
+
+    var games = context.Games
+        .Select(g => g.ToDto());
+    foreach (var game in games)
+        Console.WriteLine($"{game.Title} - {game.Price} - {game.Category}");
+    return titles;
+}
+
+static void GroupBy(StoreDbContext context)
+{
+    var categories = context.Games
+        .GroupBy(g => g.Category!.Name)
+        .Select(group => new
+        {
+            group.Key,
+            GamesCount = group.Count()
+
+        });
+
+    var categories2 = context.Games
+        .GroupBy(g => new { g.Category!.Name, g.IsDeleted })
+        .Select(group => new
+        {
+            CategoryName = group.Key.Name,
+            group.Key.IsDeleted,
+            GamesCount = group.Count(g => g.IsDeleted)
+
+        });
+}
+
+static void join(StoreDbContext context)
+{
+    var games = context.Games
+        .Join(context.Categories,
+        g => g.CategoryId,
+        c => c.CategoryId,
+        (g, c) => new
+        {
+            g.Name,
+            CategoryName = c.Name
+        });
 }
