@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Lection1013;
+namespace Lection1013.Models;
 
 public partial class Game
 {
@@ -20,6 +20,4 @@ public partial class Game
     public short KeysAmount { get; set; }
 
     public virtual Category Category { get; set; } = null!;
-
-    public virtual ICollection<Sale> Sales { get; set; } = new List<Sale>();
 }

@@ -1,8 +1,4 @@
-﻿using Lection1013;
+﻿using Lection1013.Models;
 
 Console.WriteLine("обратный инжиниринг");
-
-using var context = new Ispp3104Context();
-
-var games = context.Games;
-Console.WriteLine();
+Category category = new Category();
