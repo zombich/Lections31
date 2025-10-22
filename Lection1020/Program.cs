@@ -1,6 +1,7 @@
 ﻿using Lection1020.Contexts;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 Console.WriteLine("выполнение sql-запросов средствами ORM");
 
@@ -9,11 +10,33 @@ using var context = new GamesDbContext();
 //await FromSql(context);
 //await SqlQuery(context);
 
-decimal addingPrice = 0.5m;
-int changedRows = context.Database.ExecuteSql($"update game set price -={addingPrice}");
-Console.WriteLine(changedRows);
+int minPrice = 100;
+int maxPrice = 1000;
+var games = context.Games.FromSql($"select * from dbo.GetGamesByPrices({minPrice},{maxPrice})");
 
-var games = context.Games.Where(g => EF.Functions.Like(g.Name, "[a-d]%"));
+
+//var id = new SqlParameter("@id", SqlDbType.Int)
+//{ 
+//    Direction = ParameterDirection.Output
+//};
+//string category = "arcada2";
+//context.Database.ExecuteSqlRaw($"dbo.AddCategory {category}, @id OUTPUT", id);
+
+
+//int price = 1000;
+//var games = context.Games
+//    .FromSql($"dbo.GetGamesByPrice {price}");
+
+
+Console.WriteLine();
+Console.WriteLine();
+
+
+//decimal addingPrice = 0.5m;
+//int changedRows = context.Database.ExecuteSql($"update game set price -={addingPrice}");
+//Console.WriteLine(changedRows);
+
+//var games = context.Games.Where(g => EF.Functions.Like(g.Name, "[a-d]%"));
 
 
 static async Task FromSql(GamesDbContext context)
