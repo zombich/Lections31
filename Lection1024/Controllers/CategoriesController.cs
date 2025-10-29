@@ -5,28 +5,37 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Lection1024.Controllers
 {
-    [ApiVersion("1.0")]
-    [Route("api/v{version:apiVersion}/[controller]")]
+    //[ApiVersion("1.0")]
+    //[Route("api/v{version:apiVersion}/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class CategoriesController(GamesDbContext context) : ControllerBase
     {
         private readonly GamesDbContext _context = context;
 
+
+
         // GET: api/Categories
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Category>>> GetCategories([FromQuery] string? sortBy, [FromQuery] int page = 1)
+        public async Task<ActionResult<IEnumerable<Category>>> GetCategories([FromQuery] string? sortBy =null, [FromQuery] int? page = null)
         {
+
+
             var categories = _context.Categories.AsQueryable();
-
-            categories = sortBy?.ToLower() switch
+            if (!string.IsNullOrWhiteSpace(sortBy)) // string != / ""
             {
-                "name" => categories.OrderBy(x => x.Name),
-                "id" => categories.OrderBy(x => x.CategoryId),
-                _ => categories
-            };
-
-            var pageSize = 10;
-            categories = categories.Skip(pageSize * (page - 1)).Take(pageSize);
+                categories = sortBy?.ToLower() switch
+                {
+                    "name" => categories.OrderBy(x => x.Name),
+                    "id" => categories.OrderBy(x => x.CategoryId),
+                    _ => categories
+                };
+            }
+            if (page.HasValue) // int != null
+            {
+                var pageSize = 10;
+                categories = categories.Skip(pageSize * ((int)page - 1)).Take(pageSize);
+            }
 
             return await categories.ToListAsync();
         }
