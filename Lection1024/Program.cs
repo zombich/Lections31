@@ -15,8 +15,6 @@ builder.Services.AddControllers()
 builder.Services.AddOpenApi();
 builder.Services.AddDbContext<GamesDbContext>();
 
-
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
