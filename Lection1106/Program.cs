@@ -10,7 +10,6 @@ static void LockUser()
     var password = "123";
     using var context = new AppDbContext();
     var user = context.Users.FirstOrDefault(u => u.Login == login);
-
     if (user is null)
     {
         Console.WriteLine("not found");
