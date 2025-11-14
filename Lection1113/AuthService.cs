@@ -40,21 +40,49 @@ namespace Lection1113
 
             var token = new JwtSecurityToken(signingCredentials: credentials,
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(15),
-                //optional
-                issuer: _issuer,
-                audience: _audience);
+                expires: DateTime.UtcNow.AddMinutes(15));
+            //optional
+            //issuer: _issuer,
+            //audience: _audience);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
         public string GenerateRefreshToken()
-        { 
+        {
             var randomNumbers = new byte[32];
             using var random = RandomNumberGenerator.Create();
             random.GetBytes(randomNumbers);
 
             return Convert.ToBase64String(randomNumbers);
+        }
+
+        public bool IsValidToken(string token)
+        {
+            try
+            {
+                var tokenParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey)),
+                    ValidateLifetime = true,
+
+                    ValidateIssuer = true,
+                    ValidIssuer = _issuer,
+                    ValidateAudience = true,
+                    ValidAudience = _audience,
+
+                };
+
+                var tokenHandler = new JwtSecurityTokenHandler();
+                tokenHandler.ValidateToken(token, tokenParameters, out SecurityToken validatedToken);
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
