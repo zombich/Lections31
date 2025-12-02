@@ -14,7 +14,7 @@ builder.Services.AddOpenApi();
 
 string _secretKey = "12345678123456781234567812345678";
 string _issuer = "myapp"; // kto izdatel / kto vidaet
- string _audience = "myapp-users"; // kto potrebytel / kto polzyetsa
+string _audience = "myapp-users"; // kto potrebytel / kto polzyetsa
 
 builder.Services.AddAuthorization(); //+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
