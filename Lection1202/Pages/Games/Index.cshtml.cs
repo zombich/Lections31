@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Lection1202.Contexts;
 using Lection1202.Models;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace Lection1202.Pages.Games
 {
@@ -20,6 +21,9 @@ namespace Lection1202.Pages.Games
         }
 
         public IList<Game> Game { get;set; } = default!;
+
+        [BindProperty(SupportsGet = true)]
+        public string GameName { get; set; }
 
         public async Task OnGetAsync()
         {

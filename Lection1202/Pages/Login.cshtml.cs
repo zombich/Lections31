@@ -26,7 +26,8 @@ namespace Lection1202.Pages
 
         public IActionResult OnGetLogout()
         {
-            return RedirectToPage("/Categories/Index");
+            HttpContext.Session.Clear();
+            return Page();
         }
 
         [BindProperty]
@@ -35,22 +36,22 @@ namespace Lection1202.Pages
         // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
+            var user = _context.Users
+                // .Include(u=> u.Role)
+                .FirstOrDefault(u=> u.Login == User.Login);
+
+            if (user is null || user.Password != User.Password)
                 return Page();
-            }
 
-            _context.Users.Add(User);
-            await _context.SaveChangesAsync();
+            HttpContext.Session.SetString("Role", user.Role);
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("/Index");
         }
 
         public IActionResult OnPostGuest()
         {
-
-
-            return RedirectToPage("Games/Index");
+            HttpContext.Session.SetString("Role","Гость");
+            return RedirectToPage("/Games/Index");
         }
     }
 }

@@ -10,7 +10,7 @@ using Lection1202.Models;
 
 namespace Lection1202.Pages.Categories
 {
-    public class IndexModel : PageModel
+    public class IndexModel : AccessPageModel
     {
         private readonly Lection1202.Contexts.GamesDbContext _context;
 
@@ -21,9 +21,14 @@ namespace Lection1202.Pages.Categories
 
         public IList<Category> Category { get;set; } = default!;
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
-            Category = await _context.Categories.ToListAsync();
+            if (HasRole() is IActionResult action)
+                return action;
+
+            Category = await _context.Categories
+                .ToListAsync();
+            return Page();
         }
     }
 }

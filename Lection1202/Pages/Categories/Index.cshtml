@@ -6,10 +6,13 @@
 }
 
 <h1>Index</h1>
+@if (Model.IsAdmin)
+{
+    <p>
+        <a asp-page="Create" class="btn btn-primary">Create New</a>
+    </p>
+}
 
-<p>
-    <a asp-page="Create" class="btn btn-primary">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
